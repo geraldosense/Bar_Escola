@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Balcão · BarEscola</title>
+  <title>Balcão | BarEscola</title>
   <link rel="stylesheet" href="../css/app.css">
   <script type="module" src="../js/balcao.js"></script>
 </head>
 <body>
   <header class="topo">
-    <a class="marca" href="fila.html"><span class="logo" aria-hidden="true">🥪</span>BarEscola · Balcão</a>
+    <a class="marca" href="fila.html">BarEscola<small>Balcão</small></a>
     <div class="utilizador">
       <span data-utilizador-nome></span>
       <form method="post" action="../logout"><button class="btn-sair" type="submit">Sair</button></form>
@@ -20,7 +20,7 @@
     <div class="cabecalho-pagina">
       <div>
         <h1>Fila de encomendas</h1>
-        <p>Por intervalo e por ordem de chegada. Atualiza sozinha.</p>
+        <p>Por intervalo e por ordem de chegada. A lista atualiza-se sozinha.</p>
       </div>
       <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
         <label for="filtro-intervalo" class="sr-only">Intervalo</label>
@@ -31,10 +31,10 @@
 
     <div class="colunas-balcao">
       <section class="coluna" aria-labelledby="t-novas">
-        <h2 id="t-novas">Novas / em preparação <span class="contador" id="c-preparar">0</span></h2>
+        <h2 id="t-novas">Por preparar <span class="contador" id="c-preparar">0</span></h2>
         <div class="lista-encomendas" id="col-preparar"></div>
       </section>
-      <section class="coluna" aria-labelledby="t-prontas">
+      <section class="coluna coluna-prontas" aria-labelledby="t-prontas">
         <h2 id="t-prontas">Prontas a levantar <span class="contador" id="c-prontas">0</span></h2>
         <div class="lista-encomendas" id="col-prontas"></div>
       </section>

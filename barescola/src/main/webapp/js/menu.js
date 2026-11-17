@@ -66,6 +66,7 @@ function alterarQuantidade(id, delta) {
   if (nova === 0) estado.carrinho.delete(id);
   else estado.carrinho.set(id, nova);
   guardarCarrinho();
+  desenharProdutos();
   desenharCarrinho();
 }
 
@@ -95,7 +96,7 @@ async function pagar() {
 
   const botao = $('btn-pagar');
   botao.disabled = true;
-  botao.textContent = 'A pagar…';
+  botao.textContent = 'A pagar...';
   try {
     const pagamento = await api('/encomendas', { method: 'POST', body: { intervaloId, linhas } });
     estado.carrinho.clear();
@@ -125,29 +126,54 @@ function desenharIntervalos() {
   const abertos = estado.intervalos.filter((i) => i.aberto);
   $('intervalo').innerHTML = estado.intervalos.map((i) => `
     <option value="${i.id}" ${i.aberto ? '' : 'disabled'}>
-      ${esc(i.nome)} · ${hora(i.horaInicio)} ${i.aberto ? `(até ${hora(i.horaFechoEncomendas)})` : '— fechado'}
+      ${esc(i.nome)}, ${hora(i.horaInicio)} ${i.aberto ? `(até ${hora(i.horaFechoEncomendas)})` : '(fechado)'}
     </option>`).join('');
   if (abertos.length) $('intervalo').value = abertos[0].id;
   else $('intervalo').insertAdjacentHTML('afterbegin', '<option value="" selected>Hoje já não há intervalos abertos</option>');
 }
 
+const POUCO_STOCK = 3;
+
+function linhaProduto(p) {
+  const qtd = estado.carrinho.get(p.id) ?? 0;
+  const stock = !p.disponivel ? 'Esgotado'
+    : p.stock <= POUCO_STOCK ? `Só ${p.stock} ${p.stock === 1 ? 'disponível' : 'disponíveis'}`
+      : `${p.stock} disponíveis`;
+  const controlo = !p.disponivel ? '<span></span>'
+    : qtd === 0
+      ? `<button type="button" class="btn btn-secundario btn-redondo" data-adicionar="${p.id}" aria-label="Adicionar ${esc(p.nome)}">+</button>`
+      : `<span class="quantidade">
+           <button type="button" class="btn btn-secundario btn-redondo" data-remover="${p.id}" aria-label="Menos ${esc(p.nome)}">−</button>
+           <strong aria-label="${qtd} no pedido">${qtd}</strong>
+           <button type="button" class="btn btn-redondo" data-adicionar="${p.id}" aria-label="Mais ${esc(p.nome)}">+</button>
+         </span>`;
+  return `
+    <li class="item-produto ${p.disponivel ? '' : 'esgotado'} ${qtd ? 'no-carrinho' : ''}">
+      <div>
+        <span class="item-nome">${esc(p.nome)}</span>
+        <span class="item-stock ${p.disponivel && p.stock <= POUCO_STOCK ? 'pouco' : ''}">${stock}</span>
+      </div>
+      <span class="item-preco">${euros(p.preco)}</span>
+      ${controlo}
+    </li>`;
+}
+
 function desenharProdutos() {
   const visiveis = estado.produtos.filter((p) => estado.categoria === 'Todas' || p.categoria === estado.categoria);
   if (!visiveis.length) {
-    $('produtos').innerHTML = '<p class="vazio-grande">Sem produtos nesta categoria.</p>';
+    $('produtos').innerHTML = '<p class="vazio-grande">Não há produtos nesta categoria hoje.</p>';
     return;
   }
-  $('produtos').innerHTML = visiveis.map((p) => `
-    <article class="produto ${p.disponivel ? '' : 'indisponivel'}">
-      <span class="categoria">${esc(p.categoria)}</span>
-      <span class="nome">${esc(p.nome)}</span>
-      <span class="stock">${p.disponivel ? `${p.stock} disponíveis` : 'Esgotado'}</span>
-      <div class="rodape">
-        <span class="preco">${euros(p.preco)}</span>
-        <button type="button" class="btn btn-redondo" data-adicionar="${p.id}"
-                ${p.disponivel ? '' : 'disabled'} aria-label="Adicionar ${esc(p.nome)}">+</button>
-      </div>
-    </article>`).join('');
+  const porCategoria = new Map();
+  for (const p of visiveis) {
+    if (!porCategoria.has(p.categoria)) porCategoria.set(p.categoria, []);
+    porCategoria.get(p.categoria).push(p);
+  }
+  $('produtos').innerHTML = [...porCategoria].map(([categoria, produtos]) => `
+    <section class="menu-categoria">
+      <h2>${esc(categoria)} <span>${produtos.length} ${produtos.length === 1 ? 'produto' : 'produtos'}</span></h2>
+      <ul class="lista-produtos">${produtos.map(linhaProduto).join('')}</ul>
+    </section>`).join('');
 }
 
 function desenharCarrinho() {
@@ -156,7 +182,7 @@ function desenharCarrinho() {
     const p = produto(id);
     return `
       <li>
-        <span>${esc(p.nome)}<br><span class="subtotal">${qtd} × ${euros(p.preco)} = ${euros(p.preco * qtd)}</span></span>
+        <span>${esc(p.nome)}<span class="subtotal">${qtd} × ${euros(p.preco)} = ${euros(p.preco * qtd)}</span></span>
         <span class="qtd">
           <button type="button" class="btn btn-secundario btn-redondo" data-remover="${id}" aria-label="Menos ${esc(p.nome)}">−</button>
           <strong>${qtd}</strong>
@@ -165,7 +191,7 @@ function desenharCarrinho() {
       </li>`;
   }).join('');
 
-  $('carrinho-linhas').innerHTML = linhas || '<li class="vazio">O carrinho está vazio.</li>';
+  $('carrinho-linhas').innerHTML = linhas || '<li class="vazio">Ainda não escolheste nada. Toca em + num produto do menu.</li>';
   $('carrinho-total').textContent = euros(total);
   $('carrinho-contador').textContent = artigos ? `${artigos} artigo${artigos > 1 ? 's' : ''}` : '';
   $('barra-total').textContent = euros(total);

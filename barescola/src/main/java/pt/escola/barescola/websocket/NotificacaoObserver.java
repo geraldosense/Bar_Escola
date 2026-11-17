@@ -17,11 +17,11 @@ public class NotificacaoObserver {
     public void encomendaAlterada(@Observes(during = TransactionPhase.AFTER_SUCCESS) EncomendaAlteradaEvent ev) {
         String tipo = ev.estado() == EstadoEncomenda.PRONTA ? "PEDIDO_PRONTO" : "ESTADO_ALTERADO";
         String mensagem = switch (ev.estado()) {
-            case PAGA -> "Encomenda #" + ev.encomendaId() + " paga. Vai para a cozinha.";
-            case EM_PREPARACAO -> "A tua encomenda #" + ev.encomendaId() + " está a ser preparada.";
-            case PRONTA -> "O teu pedido #" + ev.encomendaId() + " está pronto! Levanta-o no balcão.";
-            case ENTREGUE -> "Encomenda #" + ev.encomendaId() + " entregue. Bom lanche!";
-            case CANCELADA -> "Encomenda #" + ev.encomendaId() + " cancelada. O saldo foi reposto.";
+            case PAGA -> "Senha " + ev.encomendaId() + " paga. Já seguiu para a cozinha.";
+            case EM_PREPARACAO -> "A senha " + ev.encomendaId() + " está a ser preparada.";
+            case PRONTA -> "A senha " + ev.encomendaId() + " está pronta. Podes levantar no balcão.";
+            case ENTREGUE -> "Senha " + ev.encomendaId() + " entregue.";
+            case CANCELADA -> "Senha " + ev.encomendaId() + " cancelada. O valor voltou para o cartão.";
         };
 
         String json = Json.createObjectBuilder()

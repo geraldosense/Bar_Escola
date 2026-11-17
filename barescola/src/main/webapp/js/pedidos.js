@@ -19,48 +19,57 @@ async function carregar() {
   }
 }
 
-function progresso(estadoAtual) {
+function etapas(estadoAtual) {
   if (estadoAtual === 'CANCELADA') return '';
   const indice = ORDEM.indexOf(estadoAtual);
-  return `<div class="progresso" aria-hidden="true">${ORDEM.map((_, i) =>
-    `<span class="${i <= indice ? 'feito' : ''}"></span>`).join('')}</div>`;
+  return `<ol class="etapas" aria-label="Progresso do pedido">${ORDEM.map((e, i) => `
+    <li class="${i <= indice ? 'feito' : ''} ${i === indice ? 'atual' : ''}"
+        ${i === indice ? 'aria-current="step"' : ''}>${NOMES_ESTADO[e]}</li>`).join('')}</ol>`;
+}
+
+function senha(e) {
+  const nota = e.entregaAutomatica ? '<p class="senha-meta">Fechada automaticamente no fim do dia.</p>' : '';
+  return `
+    <article class="senha estado-${e.estado} ${e.id === destaque ? 'acabou-de-ficar-pronta' : ''}" id="encomenda-${e.id}">
+      <div class="senha-numero"><span>Senha</span><strong>${e.id}</strong></div>
+      <div class="senha-corpo">
+        <div class="senha-topo">
+          <div>
+            <h3>${esc(e.intervalo)}, ${hora(e.horaIntervalo)}</h3>
+            <p class="senha-meta">Encomendada às ${horaDe(e.dataHora)}</p>
+          </div>
+          <span class="estado estado-${e.estado}">${NOMES_ESTADO[e.estado]}</span>
+        </div>
+        ${etapas(e.estado)}
+        ${nota}
+        <ul class="senha-itens">${e.linhas.map((l) => `
+          <li><span><b>${l.quantidade}×</b>${esc(l.produto)}</span><span>${euros(l.subtotal)}</span></li>`).join('')}
+        </ul>
+        <div class="senha-rodape">
+          <span>Total <span class="valor">${euros(e.total)}</span></span>
+          ${e.podeCancelar ? `<button type="button" class="btn btn-perigo btn-pequeno" data-cancelar="${e.id}">Cancelar e devolver saldo</button>` : ''}
+        </div>
+      </div>
+    </article>`;
 }
 
 function desenhar(encomendas) {
   if (!encomendas.length) {
     $('encomendas').innerHTML = `
-      <div class="cartao vazio-grande">
-        <p>Ainda não fizeste nenhuma encomenda.</p>
-        <a class="btn" href="menu.html">Ver o menu</a>
+      <div class="vazio-grande">
+        <p>Ainda não tens encomendas. Escolhe no menu e paga com o cartão.</p>
+        <a class="btn" href="menu.html">Abrir o menu</a>
       </div>`;
     return;
   }
-  $('encomendas').innerHTML = encomendas.map((e) => `
-    <article class="cartao encomenda ${e.id === destaque ? 'destaque' : ''}" id="encomenda-${e.id}">
-      <div class="cabecalho">
-        <h2>Encomenda #${e.id}</h2>
-        <span class="estado estado-${e.estado}">${NOMES_ESTADO[e.estado]}</span>
-      </div>
-      <p class="meta">
-        ${esc(e.intervalo)} às ${hora(e.horaIntervalo)} · feita às ${horaDe(e.dataHora)}
-        ${e.entregaAutomatica ? ' · fechada automaticamente no fim do dia' : ''}
-      </p>
-      ${progresso(e.estado)}
-      <ul>${e.linhas.map((l) => `<li>${l.quantidade} × ${esc(l.produto)} — ${euros(l.subtotal)}</li>`).join('')}</ul>
-      <div class="cabecalho">
-        <strong>Total: ${euros(e.total)}</strong>
-        <div class="acoes">
-          ${e.podeCancelar ? `<button type="button" class="btn btn-perigo btn-pequeno" data-cancelar="${e.id}">Cancelar</button>` : ''}
-        </div>
-      </div>
-    </article>`).join('');
+  $('encomendas').innerHTML = encomendas.map(senha).join('');
 }
 
 async function cancelar(id) {
-  if (!confirm(`Cancelar a encomenda #${id}? O valor volta para o teu cartão.`)) return;
+  if (!confirm(`Cancelar a senha ${id}? O valor volta para o teu cartão.`)) return;
   try {
     await api(`/encomendas/${id}/cancelar`, { method: 'POST' });
-    toast(`Encomenda #${id} cancelada. O saldo foi reposto.`, 'sucesso');
+    toast(`Senha ${id} cancelada. O valor voltou para o teu cartão.`, 'sucesso');
     await Promise.all([carregar(), carregarUtilizador()]);
   } catch (e) {
     mostrarErro(e);
@@ -71,7 +80,7 @@ async function cancelar(id) {
 function aoReceberAviso(msg) {
   if (msg.tipo === 'PEDIDO_PRONTO') {
     destaque = msg.encomendaId;
-    toast(`🔔 ${msg.mensagem}`, 'sucesso', 10000);
+    toast(msg.mensagem, 'sucesso', 10000);
     navigator.vibrate?.([200, 100, 200]);
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('BarEscola', { body: msg.mensagem });
@@ -92,7 +101,7 @@ if ('Notification' in window && Notification.permission === 'default') {
 }
 
 ligarWebSocket('/ws/aluno', aoReceberAviso, (ligado) => {
-  $('ligacao').textContent = ligado ? 'Avisos em tempo real ativos' : 'Sem ligação – a tentar de novo…';
+  $('ligacao').textContent = ligado ? 'Avisos ligados' : 'Sem ligação, a tentar de novo';
   $('ligacao').classList.toggle('ativa', ligado);
 });
 

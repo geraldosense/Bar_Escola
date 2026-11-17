@@ -10,7 +10,7 @@ const $ = (id) => document.getElementById(id);
 const PROXIMO = {
   PAGA: { estado: 'EM_PREPARACAO', rotulo: 'Começar a preparar' },
   EM_PREPARACAO: { estado: 'PRONTA', rotulo: 'Marcar pronta' },
-  PRONTA: { estado: 'ENTREGUE', rotulo: 'Entregue' },
+  PRONTA: { estado: 'ENTREGUE', rotulo: 'Marcar entregue' },
 };
 
 let fila = [];
@@ -18,7 +18,7 @@ let fila = [];
 async function carregarIntervalos() {
   const intervalos = await api('/intervalos');
   $('filtro-intervalo').insertAdjacentHTML('beforeend', intervalos.map((i) =>
-    `<option value="${i.id}">${esc(i.nome)} · ${hora(i.horaInicio)}</option>`).join(''));
+    `<option value="${i.id}">${esc(i.nome)}, ${hora(i.horaInicio)}</option>`).join(''));
 }
 
 async function carregar() {
@@ -34,15 +34,22 @@ async function carregar() {
 function cartaoEncomenda(e) {
   const proximo = PROXIMO[e.estado];
   return `
-    <article class="cartao encomenda">
-      <div class="cabecalho">
-        <h3>#${e.id} · ${esc(e.alunoNome)} <span class="ajuda">(${esc(e.turma)})</span></h3>
-        <span class="estado estado-${e.estado}">${NOMES_ESTADO[e.estado]}</span>
+    <article class="senha compacta estado-${e.estado}">
+      <div class="senha-numero"><span>Senha</span><strong>${e.id}</strong></div>
+      <div class="senha-corpo">
+        <div class="senha-topo">
+          <div>
+            <h3>${esc(e.alunoNome)}</h3>
+            <p class="senha-meta">Turma ${esc(e.turma)}, chegou às ${horaDe(e.dataHora)}</p>
+          </div>
+          <span class="estado estado-${e.estado}">${NOMES_ESTADO[e.estado]}</span>
+        </div>
+        <ul class="senha-itens">${e.linhas.map((l) => `<li><span><b>${l.quantidade}×</b>${esc(l.produto)}</span></li>`).join('')}</ul>
+        <div class="senha-rodape">
+          <span class="senha-meta">${esc(e.intervalo)}, ${hora(e.horaIntervalo)}</span>
+          ${proximo ? `<button type="button" class="btn btn-pequeno" data-id="${e.id}" data-estado="${proximo.estado}">${proximo.rotulo}</button>` : ''}
+        </div>
       </div>
-      <p class="meta">${esc(e.intervalo)} ${hora(e.horaIntervalo)} · chegou às ${horaDe(e.dataHora)} · ${euros(e.total)}</p>
-      <ul>${e.linhas.map((l) => `<li><strong>${l.quantidade}×</strong> ${esc(l.produto)}</li>`).join('')}</ul>
-      ${proximo ? `<div class="acoes"><button type="button" class="btn btn-pequeno" data-id="${e.id}"
-          data-estado="${proximo.estado}">${proximo.rotulo}</button></div>` : ''}
     </article>`;
 }
 
@@ -51,26 +58,26 @@ function desenhar() {
   const prontas = fila.filter((e) => e.estado === 'PRONTA');
   const vazio = (texto) => `<p class="vazio-grande">${texto}</p>`;
 
-  $('col-preparar').innerHTML = preparar.map(cartaoEncomenda).join('') || vazio('Sem encomendas por preparar.');
-  $('col-prontas').innerHTML = prontas.map(cartaoEncomenda).join('') || vazio('Nada à espera de ser levantado.');
+  $('col-preparar').innerHTML = preparar.map(cartaoEncomenda).join('') || vazio('Nada por preparar.');
+  $('col-prontas').innerHTML = prontas.map(cartaoEncomenda).join('') || vazio('Ninguém à espera de levantar.');
   $('c-preparar').textContent = preparar.length;
   $('c-prontas').textContent = prontas.length;
 
   const porIntervalo = new Map();
   for (const e of fila) {
-    const chave = `${e.intervalo} · ${hora(e.horaIntervalo)}`;
+    const chave = `${e.intervalo}, ${hora(e.horaIntervalo)}`;
     porIntervalo.set(chave, (porIntervalo.get(chave) ?? 0) + 1);
   }
   $('resumo').innerHTML = porIntervalo.size
     ? `<table><tbody>${[...porIntervalo].map(([k, n]) =>
       `<tr><td>${esc(k)}</td><td class="num"><strong>${n}</strong></td></tr>`).join('')}</tbody></table>`
-    : '<p class="ajuda">Sem encomendas ativas hoje.</p>';
+    : '<p class="ajuda">Ainda não há encomendas hoje.</p>';
 }
 
 async function mudarEstado(id, estado) {
   try {
     await api(`/encomendas/${id}/estado`, { method: 'PUT', body: { estado } });
-    if (estado === 'PRONTA') toast(`Encomenda #${id} pronta – o aluno foi avisado.`, 'sucesso');
+    if (estado === 'PRONTA') toast(`Senha ${id} pronta. O aluno foi avisado.`, 'sucesso');
     await carregar();
   } catch (e) {
     mostrarErro(e);
@@ -88,10 +95,10 @@ document.addEventListener('click', (ev) => {
 $('filtro-intervalo').addEventListener('change', carregar);
 
 ligarWebSocket('/ws/balcao', (msg) => {
-  if (msg.estado === 'PAGA') toast(`Nova encomenda #${msg.encomendaId}`);
+  if (msg.estado === 'PAGA') toast(`Nova encomenda: senha ${msg.encomendaId}`);
   carregar();
 }, (ligado) => {
-  $('ligacao').textContent = ligado ? 'Tempo real ativo' : 'Sem ligação – a tentar de novo…';
+  $('ligacao').textContent = ligado ? 'Ligado' : 'Sem ligação, a tentar de novo';
   $('ligacao').classList.toggle('ativa', ligado);
 });
 

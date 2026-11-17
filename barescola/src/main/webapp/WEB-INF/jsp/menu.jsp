@@ -12,12 +12,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Menu (JSP) · BarEscola</title>
+  <title>Menu (JSP) | BarEscola</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/app.css">
 </head>
 <body>
 <header class="topo">
-  <a class="marca" href="${pageContext.request.contextPath}/menu"><span class="logo" aria-hidden="true">🥪</span>BarEscola</a>
+  <a class="marca" href="${pageContext.request.contextPath}/menu">BarEscola</a>
   <nav>
     <a href="${pageContext.request.contextPath}/menu" aria-current="page">Menu (versão JSP)</a>
     <a href="${pageContext.request.contextPath}/aluno/pedidos.html">Os meus pedidos</a>

@@ -3,44 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Entrar · BarEscola</title>
+  <title>Entrar | BarEscola</title>
   <link rel="stylesheet" href="/barescola/css/app.css">
 </head>
 <body class="pagina-login">
-  <main class="cartao">
-    <div class="marca">
-      <span class="logo" aria-hidden="true">🥪</span>
-      <div>
-        <h1>BarEscola</h1>
-        <p class="ajuda" style="margin:0">Encomenda na aula, levanta no intervalo.</p>
-      </div>
+  <section class="login-apresentacao">
+    <span class="marca">BarEscola</span>
+    <div>
+      <h1>Encomenda na aula. Levanta no intervalo.</h1>
+      <p>Pagas com o saldo do cartão de estudante e recebes uma senha. Quando estiver pronta, avisamos-te.</p>
     </div>
+    <div class="login-senha" aria-hidden="true">
+      <span>Senha</span>
+      <strong>27</strong>
+    </div>
+  </section>
 
-    <div id="erro" class="alerta alerta-erro" hidden>Email ou palavra-passe incorretos.</div>
+  <main class="login-formulario">
+    <div class="cartao">
+      <h2>Entrar</h2>
 
-    <!-- Autenticação FORM do contentor (Jakarta Servlet): j_security_check -->
-    <form method="post" action="/barescola/j_security_check">
-      <div class="campo">
-        <label for="utilizador">Email</label>
-        <input id="utilizador" name="j_username" type="email" autocomplete="username" required autofocus>
-      </div>
-      <div class="campo">
-        <label for="senha">Palavra-passe</label>
-        <input id="senha" name="j_password" type="password" autocomplete="current-password" required>
-      </div>
-      <button class="btn btn-bloco" type="submit">Entrar</button>
-    </form>
+      <div id="erro" class="alerta alerta-erro" hidden>O email ou a palavra-passe não estão corretos. Tenta outra vez.</div>
 
-    <details>
-      <summary>Utilizadores de teste</summary>
-      <ul>
-        <li>Aluno: <code>aluno1@barescola.pt</code> / <code>Aluno#2026</code></li>
-        <li>Aluno (pouco saldo): <code>aluno2@barescola.pt</code> / <code>Aluno#2026</code></li>
-        <li>Aluno: <code>aluno3@barescola.pt</code> / <code>Aluno#2026</code></li>
-        <li>Balcão: <code>balcao@barescola.pt</code> / <code>Balcao#2026</code></li>
-        <li>Gestor: <code>gestor@barescola.pt</code> / <code>Gestor#2026</code></li>
-      </ul>
-    </details>
+      <!-- Autenticação FORM do contentor (Jakarta Servlet): j_security_check -->
+      <form method="post" action="/barescola/j_security_check">
+        <div class="campo">
+          <label for="utilizador">Email da escola</label>
+          <input id="utilizador" name="j_username" type="email" autocomplete="username" required autofocus>
+        </div>
+        <div class="campo">
+          <label for="senha">Palavra-passe</label>
+          <input id="senha" name="j_password" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="btn btn-bloco" type="submit">Entrar</button>
+      </form>
+
+      <details>
+        <summary>Contas de demonstração</summary>
+        <ul>
+          <li>Aluno: <code>aluno1@barescola.pt</code> / <code>Aluno#2026</code></li>
+          <li>Aluno com pouco saldo: <code>aluno2@barescola.pt</code> / <code>Aluno#2026</code></li>
+          <li>Aluno: <code>aluno3@barescola.pt</code> / <code>Aluno#2026</code></li>
+          <li>Balcão: <code>balcao@barescola.pt</code> / <code>Balcao#2026</code></li>
+          <li>Gestão: <code>gestor@barescola.pt</code> / <code>Gestor#2026</code></li>
+        </ul>
+      </details>
+    </div>
   </main>
   <script>
     if (new URLSearchParams(location.search).has('erro')) {
