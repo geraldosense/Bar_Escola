@@ -494,7 +494,12 @@ ul.mensagens li.erro { background: var(--vermelho-claro); border-color: var(--ve
   aspect-ratio: 4 / 3;
   padding: .75rem;
 }
-.cartao-produto .foto img { width: 100%; height: 100%; object-fit: contain; }
+.cartao-produto .foto { overflow: hidden; }
+.cartao-produto .foto img {
+  position: absolute; inset: .75rem;
+  width: calc(100% - 1.5rem); height: calc(100% - 1.5rem);
+  object-fit: contain;
+}
 .tom-bebidas { background: #dcebf8; }
 .tom-sandes  { background: #f7e6cf; }
 .tom-fruta   { background: #e2f0da; }
@@ -502,7 +507,7 @@ ul.mensagens li.erro { background: var(--vermelho-claro); border-color: var(--ve
 .cartao-produto .foto:not([class*="tom-"]) { background: var(--papel); }
 
 .selo {
-  position: absolute; top: .6rem; left: .6rem;
+  position: absolute; top: .6rem; left: .6rem; z-index: 1;
   padding: .15rem .5rem; border-radius: 3px;
   background: var(--marinho); color: var(--branco);
   font-size: var(--t-xs); font-weight: 600;
@@ -520,9 +525,34 @@ ul.mensagens li.erro { background: var(--vermelho-claro); border-color: var(--ve
 .cartao-produto .quantidade { justify-content: space-between; }
 .cartao-produto.no-carrinho { border-color: var(--marinho); box-shadow: inset 0 0 0 1px var(--marinho); }
 .cartao-produto.no-carrinho .foto::after {
-  content: "No pedido"; position: absolute; top: .6rem; right: .6rem;
+  content: "No pedido"; position: absolute; top: .6rem; right: .6rem; z-index: 1;
   padding: .15rem .5rem; border-radius: 3px;
   background: var(--senha); color: var(--marinho); font-size: var(--t-xs); font-weight: 700;
 }
 .cartao-produto.esgotado .foto img { filter: grayscale(1); opacity: .45; }
 .cartao-produto.esgotado .item-nome, .cartao-produto.esgotado .item-preco { color: var(--tinta-2); }
+
+/* ------------------------------------------------------- Login simples */
+.login-simples {
+  min-height: 100vh; margin: 0;
+  display: grid; place-items: center; padding: 1rem;
+  background: var(--marinho);
+}
+.login-simples .cartao { width: min(100%, 400px); padding: 1.75rem; }
+.login-simples .marca { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.25rem; }
+.login-simples .marca h1 { font-size: var(--t-xl); margin: 0; }
+.login-simples .marca p { margin: 0; }
+.login-simples .logo {
+  display: grid; place-items: center; flex: none;
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--senha); font-size: 1.4rem;
+}
+.login-simples details { margin-top: 1.25rem; font-size: var(--t-sm); color: var(--tinta-2); }
+.login-simples details summary { cursor: pointer; font-weight: 600; color: var(--tinta); }
+.login-simples details ul { padding-left: 1.1rem; }
+.login-simples code { font-size: .85em; }
+
+/* ------------------------------------------------ Fotografias dos produtos */
+.cartao-produto .foto.tem-foto { padding: 0; background: var(--papel); }
+.cartao-produto .foto.tem-foto img { inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.creditos { margin-top: 2rem; font-size: var(--t-xs); color: var(--tinta-2); }
