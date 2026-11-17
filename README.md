@@ -26,6 +26,7 @@ Projeto Integrador · UFCD 10791 · Aplicação web empresarial em Jakarta EE 10
 16. [Documentação](#16-documentação)
 17. [Equipa](#17-equipa)
 18. [Uso de IA](#18-uso-de-ia)
+19. [Referências](#19-referências)
 
 ---
 
@@ -144,35 +145,34 @@ A aplicação segue uma **arquitetura em camadas**:
 ### Estrutura do projeto
 
 ```
-barescola/
-Bar_Escola/                       (repositório Git)
+Bar_Escola/                       repositório Git
 ├── README.md                     este documento
 └── barescola/                    projeto Maven
-├── pom.xml                       configuração Maven
-├── api.http                      pedidos de teste (VS Code REST Client)
-├── scripts/                      configuração do WildFly (datasource + utilizadores)
-├── docs/                         diagramas, Postman, SOAP, manual, checklist
-└── src/
-    ├── main/java/pt/escola/barescola/
-    │   ├── config/               JAX-RS, papéis, relógio, dados iniciais
-    │   ├── model/                entidades JPA + EstadoEncomenda
-    │   ├── dto/                  objetos de entrada/saída da API
-    │   ├── service/              EJB com as regras de negócio + exceções
-    │   ├── jms/                  fila da cozinha (produtor + MDB)
-    │   ├── timer/                fecho do dia (@Schedule)
-    │   ├── rest/                 recursos JAX-RS + tratamento de erros
-    │   ├── websocket/            avisos em tempo real
-    │   ├── soap/                 serviço CartaoWS
-    │   ├── web/                  servlets, carrinho de sessão, filtros
-    │   └── jsf/                  backing beans do backoffice
-    ├── main/webapp/
-    │   ├── aluno/                menu e pedidos do aluno
-    │   ├── balcao/               ecrã do balcão
-    │   ├── backoffice/           páginas JSF de gestão
-    │   ├── prototipo/            protótipo da etapa 2 (dados falsos)
-    │   ├── WEB-INF/              web.xml, JSP, templates JSF
-    │   └── css/ · js/            estilos e scripts
-    └── test/java/                testes unitários (JUnit 5)
+    ├── pom.xml                       configuração Maven
+    ├── api.http                      pedidos de teste (VS Code REST Client)
+    ├── scripts/                      configuração do WildFly (datasource + utilizadores)
+    ├── docs/                         diagramas, Postman, SOAP, manual, checklist
+    └── src/
+        ├── main/java/pt/escola/barescola/
+        │   ├── config/               JAX-RS, papéis, relógio, dados iniciais
+        │   ├── model/                entidades JPA + EstadoEncomenda
+        │   ├── dto/                  objetos de entrada/saída da API
+        │   ├── service/              EJB com as regras de negócio + exceções
+        │   ├── jms/                  fila da cozinha (produtor + MDB)
+        │   ├── timer/                fecho do dia (@Schedule)
+        │   ├── rest/                 recursos JAX-RS + tratamento de erros
+        │   ├── websocket/            avisos em tempo real
+        │   ├── soap/                 serviço CartaoWS
+        │   ├── web/                  servlets, carrinho de sessão, filtros
+        │   └── jsf/                  backing beans do backoffice
+        ├── main/webapp/
+        │   ├── aluno/                menu e pedidos do aluno
+        │   ├── balcao/               ecrã do balcão
+        │   ├── backoffice/           páginas JSF de gestão
+        │   ├── prototipo/            protótipo da etapa 2 (dados falsos)
+        │   ├── WEB-INF/              web.xml, JSP, templates JSF
+        │   └── css/ · js/            estilos e scripts
+        └── test/java/                testes unitários (JUnit 5)
 ```
 
 Diagrama de camadas detalhado: [docs/diagramas/arquitetura.md](barescola/docs/diagramas/arquitetura.md)
@@ -283,7 +283,27 @@ Todos os erros seguem o mesmo formato:
 - **Apache Maven 3.9+**
 - **WildFly** com suporte a Jakarta EE 10 → <https://www.wildfly.org/downloads/>
 
-### Instalação
+### Instalação automática (macOS)
+
+Um único script instala e configura todo o ambiente, sem precisar de palavra-passe de administrador:
+JDK 21 (Temurin), Maven, WildFly EE 10, variáveis de ambiente, base de dados, utilizadores de teste,
+compilação, arranque do servidor e deploy.
+
+```bash
+cd barescola
+bash scripts/instalar-mac.sh
+```
+
+No fim, a aplicação abre sozinha em <http://localhost:8080/barescola>.
+
+| Componente | Local de instalação |
+|---|---|
+| JDK 21 | `~/Library/Java/JavaVirtualMachines/temurin-21.jdk` |
+| Maven | `~/Developer/maven` |
+| WildFly EE 10 | `~/Developer/wildfly` |
+| Log do servidor | `~/Developer/logs/wildfly.log` |
+
+### Instalação manual
 
 0. **Entrar na pasta do projeto** (todos os comandos seguintes correm dentro dela)
    ```bash
@@ -407,6 +427,18 @@ Checklist completa: [docs/checklist-seguranca.md](barescola/docs/checklist-segur
 | **O que pedimos** | Apoio na estrutura inicial do projeto a partir do guia: código das 10 etapas, documentação e configuração do VS Code. |
 | **O que aproveitámos** | _(preencher pela equipa)_ |
 | **O que tivemos de corrigir** | _(preencher pela equipa – ex.: erros de compilação, configuração do WildFly, testes no SoapUI)_ |
+
+## 19. Referências
+
+| Recurso | Para quê |
+|---|---|
+| [Jakarta EE – Especificações](https://jakarta.ee/specifications/) | Documentação oficial de cada especificação (Servlet, JPA, EJB, JAX-RS…) |
+| [Jakarta EE – Learn](https://jakarta.ee/learn/) | Tutoriais e material de aprendizagem oficial |
+| [WildFly Quickstarts](https://github.com/wildfly/quickstart) | Exemplos oficiais de cada tecnologia a correr no WildFly |
+| [Baeldung](https://www.baeldung.com/) | Artigos práticos sobre Java, JPA, REST e segurança |
+| [MDN Web Docs](https://developer.mozilla.org/en-US/) | Referência de HTML, CSS, JavaScript e WebSockets |
+| [OWASP Top Ten](https://owasp.org/projects/top-ten) | Os 10 riscos de segurança web mais críticos (base da checklist de segurança) |
+| [OWASP WebGoat](https://owasp.org/projects/webgoat) | Aplicação de treino para praticar e perceber vulnerabilidades |
 
 ---
 
