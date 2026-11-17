@@ -23,26 +23,19 @@ def espessura_base_E():
 
 CAP = 1493; ARM = 291; YB = 633 + ARM / 2   # medidas do E da DejaVu Sans Condensed Bold
 
-def ligadura_es(ox, base, sc, cor, Ws=900, gap=70):
-    """Monograma ES: o braço do meio do E continua e torna-se a espinha do S (uma só peça, sem costuras)."""
-    def P(x, y): return f'{ox + x * sc:.2f},{base - y * sc:.2f}'
-    # E sem o braço do meio (o braço é desenhado como início do traço do S)
-    e = (f'M{P(169,0)} L{P(1124,0)} L{P(1124,ARM)} L{P(516,ARM)} L{P(516,1202)} L{P(1104,1202)} '
-         f'L{P(1104,CAP)} L{P(169,CAP)} Z')
-    w = ARM; hw = w / 2; xs = 1104 + gap; R = Ws - w
-    xl, xr, xm = xs + hw, xs + Ws - hw, xs + Ws / 2
-    sup = (f'M{P(xr, CAP-400)} C{P(xr, CAP-hw)} {P(xm+R*0.25, CAP-hw)} {P(xm, CAP-hw)} '
-           f'C{P(xl, CAP-hw)} {P(xl, CAP-hw-120)} {P(xl, CAP-hw-200)} '
-           f'C{P(xl, YB+170)} {P(xl+200, YB)} {P(xm+40, YB)}')
-    inf = (f'M{P(430, YB)} L{P(xm+40, YB)} '
-           f'C{P(xr, YB-10)} {P(xr, YB-150)} {P(xr, YB-300)} '
-           f'C{P(xr, hw+120)} {P(xm+R*0.3, ARM/2)} {P(xm, ARM/2)} '
-           f'C{P(xl+80, ARM/2)} {P(xl, ARM/2+120)} {P(xl, 420)}')
-    sw = w * sc
-    svg = (f'<path d="{e}" fill="{cor}"/>'
-           f'<path d="{sup}" fill="none" stroke="{cor}" stroke-width="{sw:.2f}"/>'
-           f'<path d="{inf}" fill="none" stroke="{cor}" stroke-width="{sw:.2f}"/>')
-    return svg, xs + Ws + 60
+import json, os
+_ES = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'monograma-es.json')))
+E_TOPO, E_BASE = _ES['e_topo'], _ES['e_base']      # linhas do E no desenho original (píxeis)
+
+def ligadura_es(ox, base, sc, cor, margem=70):
+    """Monograma ES (desenho da equipa, vetorizado): o braço do meio do E transforma-se no S."""
+    bx0, by0, bx1, by1 = _ES['bbox']
+    k = CAP * sc / (E_BASE - E_TOPO)                 # a altura do E = altura das maiúsculas
+    x_ini = ox + margem * sc
+    def P(x, y): return f'{x_ini + (x - bx0) * k:.2f},{base - (E_BASE - y) * k:.2f}'
+    d = ' '.join('M' + ' L'.join(P(x, y) for x, y in c) + ' Z' for c in _ES['paths'])
+    largura = (bx1 - bx0) * k / sc
+    return f'<path d="{d}" fill="{cor}" fill-rule="evenodd"/>', largura + 2 * margem
 
 def nome(tam, x0, base, cor_texto, tracking=-0.01):
     s = tam / upm; partes = []; x = 0
