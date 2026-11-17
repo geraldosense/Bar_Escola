@@ -111,8 +111,14 @@ export function mostrarErro(erro) {
  */
 export async function carregarUtilizador() {
   const eu = await api('/me');
+  const nomeCompleto = eu.aluno?.nome ?? eu.username.split('@')[0];
   const nome = document.querySelector('[data-utilizador-nome]');
-  if (nome) nome.textContent = eu.aluno?.nome ?? eu.username;
+  if (nome) nome.textContent = nomeCompleto;
+  const avatar = document.querySelector('[data-avatar]');
+  if (avatar) {
+    const partes = nomeCompleto.trim().split(/\s+/);
+    avatar.textContent = (partes[0][0] + (partes.length > 1 ? partes.at(-1)[0] : '')).toUpperCase();
+  }
   atualizarSaldo(eu.aluno?.saldo);
   return eu;
 }

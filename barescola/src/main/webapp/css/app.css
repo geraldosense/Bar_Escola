@@ -83,54 +83,70 @@ a { color: var(--marinho-2); }
 /* ------------------------------------------------------------- Cabeçalho */
 .topo {
   position: sticky; top: 0; z-index: 20;
-  display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
-  padding: 0 1rem;
-  min-height: 60px;
   background: var(--marinho);
   color: var(--branco);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .06), 0 2px 10px rgba(14, 22, 40, .25);
 }
-.topo .marca {
-  font-family: var(--letra-titulo);
-  font-size: 1.5rem; font-weight: 700;
-  color: var(--branco); text-decoration: none;
-  letter-spacing: -.01em;
+.topo-interior {
+  max-width: 1160px; margin: 0 auto;
+  display: flex; align-items: center; gap: 2.25rem;
+  min-height: 64px; padding: 0 1rem;
 }
-.topo .marca .logo { display: none; } /* compatibilidade com marcação antiga */
-.topo .marca small {
-  font-family: var(--letra-texto);
-  font-size: var(--t-sm); font-weight: 500;
-  color: #aab4c8; margin-left: .4rem;
+.topo .marca { display: flex; align-items: center; gap: .75rem; text-decoration: none; flex: none; }
+.topo .marca img { display: block; height: 30px; width: auto; }
+.marca-area {
+  padding-left: .75rem; border-left: 1px solid rgba(255, 255, 255, .25);
+  color: #c9d1e0; font-size: var(--t-sm); font-weight: 600;
 }
-.topo nav { display: flex; align-self: stretch; }
+.topo nav { display: flex; align-self: stretch; gap: .25rem; }
 .topo nav a {
+  position: relative;
   display: flex; align-items: center;
-  padding: 0 .9rem;
+  padding: 0 .85rem;
   color: #c9d1e0; text-decoration: none; font-weight: 500;
-  border-bottom: 3px solid transparent;
 }
 .topo nav a:hover { color: var(--branco); }
-.topo nav a[aria-current="page"] { color: var(--branco); border-bottom-color: var(--senha); }
+.topo nav a[aria-current="page"] { color: var(--branco); font-weight: 600; }
+.topo nav a[aria-current="page"]::after {
+  content: ""; position: absolute; left: .85rem; right: .85rem; bottom: 0;
+  height: 3px; border-radius: 3px 3px 0 0; background: var(--senha);
+}
+
 .topo .utilizador {
   margin-left: auto;
-  display: flex; align-items: center; gap: 1rem;
+  display: flex; align-items: center; gap: .9rem;
   font-size: var(--t-sm); color: #c9d1e0;
 }
-.topo .saldo { color: var(--branco); }
-.topo .saldo::before { content: "Saldo "; color: #aab4c8; }
-.topo .saldo { font-weight: 700; }
+.avatar {
+  display: grid; place-items: center; flex: none;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--senha); color: var(--marinho);
+  font-size: var(--t-xs); font-weight: 700;
+}
+.avatar:empty { display: none; }
+.topo .nome { color: var(--branco); font-weight: 500; }
+.topo .saldo {
+  display: inline-flex; align-items: baseline; gap: .4rem;
+  padding: .3rem .7rem; border-radius: 999px;
+  background: rgba(255, 255, 255, .1); color: var(--branco); font-weight: 700;
+}
+.topo .saldo::before { content: "Saldo"; color: #aab4c8; font-weight: 500; font-size: var(--t-xs); }
 .topo form { margin: 0; }
 .topo .btn-sair {
-  background: none; border: 0; padding: .25rem 0;
-  color: #c9d1e0; font: inherit; cursor: pointer;
-  text-decoration: underline; text-underline-offset: 3px;
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .4rem .75rem; border-radius: var(--r-controlo);
+  border: 1px solid rgba(255, 255, 255, .28); background: none;
+  color: var(--branco); font: inherit; font-weight: 500; cursor: pointer;
 }
-.topo .btn-sair:hover { color: var(--branco); }
+.topo .btn-sair:hover { background: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .5); }
 
-@media (max-width: 640px) {
-  .topo { gap: .25rem 1rem; padding-top: .5rem; }
-  .topo nav { order: 3; width: 100%; margin: 0 -1rem; padding: 0 .1rem; }
-  .topo nav a { padding: .6rem .9rem; }
-  [data-utilizador-nome] { display: none; }
+@media (max-width: 760px) {
+  .topo-interior { flex-wrap: wrap; gap: 0 1rem; padding-top: .5rem; min-height: 0; }
+  .topo .marca img { height: 26px; }
+  .topo nav { order: 3; width: calc(100% + 2rem); margin: .4rem -1rem 0; padding: 0 .25rem; border-top: 1px solid rgba(255, 255, 255, .08); }
+  .topo nav a { padding: .7rem .85rem; }
+  .topo .nome, .marca-area, .btn-sair span, .topo .avatar { display: none; }
+  .topo .utilizador { gap: .6rem; }
 }
 
 /* ----------------------------------------------------------------- Layout */
@@ -239,7 +255,7 @@ input:focus, select:focus { border-color: var(--marinho); outline: 3px solid var
 .quantidade strong { min-width: 2ch; text-align: center; font-family: var(--letra-titulo); font-size: var(--t-lg); }
 
 /* ----------------------------------------------------- Carrinho (tabuleiro) */
-.carrinho { position: sticky; top: 80px; padding: 0; overflow: hidden; }
+.carrinho { position: sticky; top: 84px; padding: 0; overflow: hidden; }
 .carrinho > * { padding-left: 1.25rem; padding-right: 1.25rem; }
 .carrinho h2 {
   display: flex; justify-content: space-between; align-items: baseline;
@@ -539,7 +555,8 @@ ul.mensagens li.erro { background: var(--vermelho-claro); border-color: var(--ve
   background: var(--marinho);
 }
 .login-simples .cartao { width: min(100%, 400px); padding: 1.75rem; }
-.login-simples .marca { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.25rem; }
+.login-simples .marca { display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; margin-bottom: 1.5rem; }
+.login-simples .marca img { display: block; height: 38px; width: auto; }
 .login-simples .marca h1 { font-size: var(--t-xl); margin: 0; }
 .login-simples .marca p { margin: 0; }
 .login-simples .logo {

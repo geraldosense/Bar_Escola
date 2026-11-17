@@ -14,19 +14,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Menu (JSP) | BarEscola</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/app.css">
+  <link rel="icon" type="image/svg+xml" href="/barescola/favicon.svg">
 </head>
 <body>
 <header class="topo">
-  <a class="marca" href="${pageContext.request.contextPath}/menu">BarEscola</a>
+    <div class="topo-interior">
+  <a class="marca" href="${pageContext.request.contextPath}/menu"><img src="${pageContext.request.contextPath}/img/logo/logo-branco.svg" alt="BarEscola" width="148" height="30"></a>
   <nav>
     <a href="${pageContext.request.contextPath}/menu" aria-current="page">Menu (versão JSP)</a>
     <a href="${pageContext.request.contextPath}/aluno/pedidos.html">Os meus pedidos</a>
   </nav>
   <div class="utilizador">
-    <span><c:out value="${pageContext.request.userPrincipal.name}"/></span>
-    <form method="post" action="${pageContext.request.contextPath}/logout"><button class="btn-sair">Sair</button></form>
+    <span class="nome"><c:out value="${pageContext.request.userPrincipal.name}"/></span>
+    <form method="post" action="${pageContext.request.contextPath}/logout"><button class="btn-sair" type="submit"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg><span>Sair</span></button></form>
   </div>
-</header>
+  </div>
+  </header>
 
 <main class="conteudo">
   <h1>Menu do dia</h1>
