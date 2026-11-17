@@ -35,6 +35,8 @@
       <button class="btn btn-bloco" type="submit">Entrar</button>
     </form>
 
+    <p class="troca-conta">Ainda não tens conta? <a href="/barescola/registo.html">Criar conta de aluno</a></p>
+
     <details>
       <summary>Utilizadores de teste</summary>
       <ul>
@@ -47,8 +49,14 @@
     </details>
   </main>
   <script>
-    if (new URLSearchParams(location.search).has('erro')) {
+    const parametros = new URLSearchParams(location.search);
+    if (parametros.has('erro')) {
       document.getElementById('erro').hidden = false;
+    }
+    // Vindo da criação de conta: email já preenchido
+    if (parametros.get('email')) {
+      document.getElementById('utilizador').value = parametros.get('email');
+      document.getElementById('senha').focus();
     }
 
     // Mostrar / ocultar a palavra-passe

@@ -44,11 +44,12 @@
 
   <!-- ===================== Segurança (etapa 10) ===================== -->
 
-  <!-- Públicos: estado da API (etapa 1) -->
+  <!-- Públicos: estado da API (etapa 1) e criação de conta -->
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>Publico</web-resource-name>
       <url-pattern>/api/estado</url-pattern>
+      <url-pattern>/api/registo</url-pattern>
     </web-resource-collection>
   </security-constraint>
 

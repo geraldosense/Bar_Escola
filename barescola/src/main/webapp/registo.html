@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="/barescola/favicon.svg">
+  <title>Criar conta | BarEscola</title>
+  <link rel="stylesheet" href="/barescola/css/app.css">
+  <script src="/barescola/js/registo.js" defer></script>
+</head>
+<body class="login-simples">
+  <main class="cartao cartao-registo">
+    <div class="marca">
+      <img src="/barescola/img/logo/logo.svg" alt="BarEscola" width="190" height="38">
+      <p class="ajuda">Cria a tua conta de aluno para encomendares no bar.</p>
+    </div>
+
+    <section id="passo-formulario">
+      <h1 class="titulo-registo">Criar conta</h1>
+      <div id="erro" class="alerta alerta-erro" role="alert" hidden></div>
+
+      <form id="form-registo" novalidate>
+        <div class="campo">
+          <label for="nome">Nome completo</label>
+          <input id="nome" name="nome" autocomplete="name" maxlength="100" required>
+        </div>
+        <div class="linha-campos">
+          <div class="campo">
+            <label for="numero">Nº de aluno</label>
+            <input id="numero" name="numero" type="number" inputmode="numeric" min="1" required>
+            <p class="ajuda">O número do teu cartão.</p>
+          </div>
+          <div class="campo">
+            <label for="turma">Turma</label>
+            <input id="turma" name="turma" placeholder="ex.: 10A" maxlength="6" autocapitalize="characters" required>
+          </div>
+        </div>
+        <div class="campo">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+          <p class="ajuda">É com este email que vais entrar.</p>
+        </div>
+        <div class="campo">
+          <label for="senha">Palavra-passe</label>
+          <div class="campo-senha">
+            <input id="senha" name="senha" type="password" autocomplete="new-password" minlength="8" required aria-describedby="regra-senha">
+            <button type="button" class="ver-senha" data-alvo="senha" aria-pressed="false" aria-label="Mostrar palavra-passe" title="Mostrar palavra-passe">
+              <svg class="icone-mostrar" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icone-ocultar" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.5 0 10 7 10 7a17.6 17.6 0 0 1-3.2 4.2M6.6 6.6A17.4 17.4 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+            </button>
+          </div>
+          <ul class="regras-senha" id="regra-senha">
+            <li data-regra="tamanho">Pelo menos 8 caracteres</li>
+            <li data-regra="letra">Pelo menos uma letra</li>
+            <li data-regra="numero">Pelo menos um número</li>
+          </ul>
+        </div>
+        <div class="campo">
+          <label for="senha2">Repetir palavra-passe</label>
+          <input id="senha2" name="senha2" type="password" autocomplete="new-password" required>
+        </div>
+        <button class="btn btn-bloco" type="submit" id="btn-criar">Criar conta</button>
+      </form>
+
+      <p class="troca-conta">Já tens conta? <a href="/barescola/login.html">Entrar</a></p>
+    </section>
+
+    <section id="passo-sucesso" hidden>
+      <div class="alerta alerta-sucesso" role="status">
+        <strong>Conta criada.</strong> <span id="msg-sucesso"></span>
+      </div>
+      <p class="ajuda">O teu saldo começa a 0,00 €. Para o carregar, fala com o bar da escola.</p>
+      <a class="btn btn-bloco" id="link-entrar" href="/barescola/login.html">Entrar na aplicação</a>
+    </section>
+  </main>
+</body>
+</html>

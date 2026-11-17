@@ -587,3 +587,14 @@ ul.mensagens li.erro { background: var(--vermelho-claro); border-color: var(--ve
 .ver-senha .icone-ocultar { display: none; }
 .ver-senha[aria-pressed="true"] .icone-mostrar { display: none; }
 .ver-senha[aria-pressed="true"] .icone-ocultar { display: block; }
+
+/* Criar conta */
+.cartao-registo { width: min(100%, 460px) !important; }
+.titulo-registo { font-size: var(--t-xl); margin-bottom: 1rem; }
+.troca-conta { margin: 1.1rem 0 0; text-align: center; font-size: var(--t-sm); color: var(--tinta-2); }
+.troca-conta a { font-weight: 600; }
+.regras-senha { list-style: none; padding: 0; margin: .5rem 0 0; display: grid; gap: .15rem; font-size: var(--t-xs); color: var(--tinta-2); }
+.regras-senha li::before { content: "○"; margin-right: .4rem; }
+.regras-senha li.cumprida { color: var(--verde); }
+.regras-senha li.cumprida::before { content: "●"; }
+.alerta ul { margin: .4rem 0 0; padding-left: 1.1rem; }
