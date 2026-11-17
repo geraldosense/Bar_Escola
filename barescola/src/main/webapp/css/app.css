@@ -556,3 +556,17 @@ ul.mensagens li.erro { background: var(--vermelho-claro); border-color: var(--ve
 .cartao-produto .foto.tem-foto { padding: 0; background: var(--papel); }
 .cartao-produto .foto.tem-foto img { inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .creditos { margin-top: 2rem; font-size: var(--t-xs); color: var(--tinta-2); }
+
+/* Mostrar / ocultar palavra-passe */
+.campo-senha { position: relative; }
+.campo-senha input { padding-right: 3rem; }
+.ver-senha {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 44px;
+  display: grid; place-items: center;
+  border: 0; background: none; color: var(--tinta-2); cursor: pointer;
+  border-radius: 0 var(--r-controlo) var(--r-controlo) 0;
+}
+.ver-senha:hover { color: var(--marinho); }
+.ver-senha .icone-ocultar { display: none; }
+.ver-senha[aria-pressed="true"] .icone-mostrar { display: none; }
+.ver-senha[aria-pressed="true"] .icone-ocultar { display: block; }
