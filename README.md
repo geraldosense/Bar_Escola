@@ -1,6 +1,5 @@
 <p align="center"><img src="barescola/src/main/webapp/img/logo/logo.svg" alt="BarEscola" width="360"></p>
 
-# BarEscola
 
 **Encomendas antecipadas no bar da escola, pagas com o saldo do cartão de estudante.**
 
