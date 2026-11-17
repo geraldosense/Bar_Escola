@@ -138,27 +138,50 @@ function desenharIntervalos() {
 
 const POUCO_STOCK = 3;
 
+/* Ilustração de cada produto (img/produtos/*.svg), escolhida pelo nome e, em último caso, pela categoria.
+   Para um produto novo basta juntar aqui uma palavra-chave e o respetivo SVG. */
+const ILUSTRACOES = [
+  ['pao de queijo', 'pao-queijo'], ['leite', 'leite-chocolate'], ['agua', 'agua'], ['sumo', 'sumo'],
+  ['cafe', 'cafe'], ['tosta', 'tosta'], ['sandes', 'sandes'], ['maca', 'maca'], ['banana', 'banana'],
+  ['croissant', 'croissant'], ['rissol', 'rissol'], ['salgad', 'rissol'],
+];
+const POR_CATEGORIA = { bebidas: 'bebida', sandes: 'sandes', fruta: 'maca', 'bolos e salgados': 'croissant' };
+const semAcentos = (t) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+function ilustracao(p) {
+  const nome = semAcentos(p.nome);
+  const encontrada = ILUSTRACOES.find(([chave]) => nome.includes(chave));
+  const ficheiro = encontrada ? encontrada[1] : (POR_CATEGORIA[semAcentos(p.categoria)] ?? 'produto');
+  return `../img/produtos/${ficheiro}.svg`;
+}
+
+/** Classe de cor do fundo da ilustração, por categoria. */
+const tomCategoria = (categoria) => `tom-${semAcentos(categoria).split(' ')[0]}`;
+
 function linhaProduto(p) {
   const qtd = estado.carrinho.get(p.id) ?? 0;
-  const stock = !p.disponivel ? 'Esgotado'
-    : p.stock <= POUCO_STOCK ? `Só ${p.stock} ${p.stock === 1 ? 'disponível' : 'disponíveis'}`
-      : `${p.stock} disponíveis`;
-  const controlo = !p.disponivel ? '<span></span>'
+  const aviso = !p.disponivel ? '<span class="selo selo-esgotado">Esgotado</span>'
+    : p.stock <= POUCO_STOCK ? `<span class="selo">Só ${p.stock}</span>` : '';
+  const controlo = !p.disponivel
+    ? '<button type="button" class="btn btn-bloco" disabled>Indisponível</button>'
     : qtd === 0
-      ? `<button type="button" class="btn btn-secundario btn-redondo" data-adicionar="${p.id}" aria-label="Adicionar ${esc(p.nome)}">+</button>`
-      : `<span class="quantidade">
+      ? `<button type="button" class="btn btn-bloco" data-adicionar="${p.id}" aria-label="Adicionar ${esc(p.nome)} ao pedido">Adicionar</button>`
+      : `<div class="quantidade">
            <button type="button" class="btn btn-secundario btn-redondo" data-remover="${p.id}" aria-label="Menos ${esc(p.nome)}">−</button>
            <strong aria-label="${qtd} no pedido">${qtd}</strong>
            <button type="button" class="btn btn-redondo" data-adicionar="${p.id}" aria-label="Mais ${esc(p.nome)}">+</button>
-         </span>`;
+         </div>`;
   return `
-    <li class="item-produto ${p.disponivel ? '' : 'esgotado'} ${qtd ? 'no-carrinho' : ''}">
-      <div>
-        <span class="item-nome">${esc(p.nome)}</span>
-        <span class="item-stock ${p.disponivel && p.stock <= POUCO_STOCK ? 'pouco' : ''}">${stock}</span>
+    <li class="cartao-produto ${p.disponivel ? '' : 'esgotado'} ${qtd ? 'no-carrinho' : ''}">
+      <div class="foto ${tomCategoria(p.categoria)}">
+        <img src="${ilustracao(p)}" alt="" loading="lazy" width="160" height="120">
+        ${aviso}
       </div>
-      <span class="item-preco">${euros(p.preco)}</span>
-      ${controlo}
+      <div class="info">
+        <span class="item-nome">${esc(p.nome)}</span>
+        <span class="item-preco">${euros(p.preco)}</span>
+      </div>
+      <div class="acao">${controlo}</div>
     </li>`;
 }
 
@@ -176,7 +199,7 @@ function desenharProdutos() {
   $('produtos').innerHTML = [...porCategoria].map(([categoria, produtos]) => `
     <section class="menu-categoria">
       <h2>${esc(categoria)} <span>${produtos.length} ${produtos.length === 1 ? 'produto' : 'produtos'}</span></h2>
-      <ul class="lista-produtos">${produtos.map(linhaProduto).join('')}</ul>
+      <ul class="lista-produtos grelha">${produtos.map(linhaProduto).join('')}</ul>
     </section>`).join('');
 }
 
