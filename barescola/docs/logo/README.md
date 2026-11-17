@@ -6,6 +6,7 @@
 
 - **Senha de bar** (talão amarelo com recortes laterais): o aluno encomenda e recebe uma senha para levantar.
 - **Relógio com um quarto preenchido**: os 15 minutos do intervalo – o problema que a aplicação resolve.
+- **"Es" a amarelo, unidos pela base**: as letras de **Es**cola ligam-se como uma só peça, na cor do símbolo, ligando o nome à senha.
 
 ## Ficheiros
 
@@ -32,3 +33,5 @@ Os SVG não dependem de nenhuma fonte instalada (o texto está convertido em for
 - Não alterar as cores, não esticar e não aplicar sombras ou contornos.
 - Tamanho mínimo: 24 px de altura no ecrã.
 - Letra do nome: DejaVu Sans Condensed Bold (licença livre).
+- Só o **E** e o **s** usam o amarelo; o resto do nome é azul-marinho (ou branco em fundo escuro).
+- Os ficheiros são gerados por `gerar-logo.py` (Python + fontTools): `python3 gerar-logo.py <pasta-destino>`.
