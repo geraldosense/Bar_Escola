@@ -21,27 +21,43 @@ def espessura_base_E():
     ys = sorted({round(pt[1]) for op, pts in rp.value for pt in pts})
     return [y for y in ys if y > 0][0]
 
+CAP = 1493; ARM = 291; YB = 633 + ARM / 2   # medidas do E da DejaVu Sans Condensed Bold
+
+def ligadura_es(ox, base, sc, cor, Ws=900, gap=70):
+    """Monograma ES: o braço do meio do E continua e torna-se a espinha do S (uma só peça, sem costuras)."""
+    def P(x, y): return f'{ox + x * sc:.2f},{base - y * sc:.2f}'
+    # E sem o braço do meio (o braço é desenhado como início do traço do S)
+    e = (f'M{P(169,0)} L{P(1124,0)} L{P(1124,ARM)} L{P(516,ARM)} L{P(516,1202)} L{P(1104,1202)} '
+         f'L{P(1104,CAP)} L{P(169,CAP)} Z')
+    w = ARM; hw = w / 2; xs = 1104 + gap; R = Ws - w
+    xl, xr, xm = xs + hw, xs + Ws - hw, xs + Ws / 2
+    sup = (f'M{P(xr, CAP-400)} C{P(xr, CAP-hw)} {P(xm+R*0.25, CAP-hw)} {P(xm, CAP-hw)} '
+           f'C{P(xl, CAP-hw)} {P(xl, CAP-hw-120)} {P(xl, CAP-hw-200)} '
+           f'C{P(xl, YB+170)} {P(xl+200, YB)} {P(xm+40, YB)}')
+    inf = (f'M{P(430, YB)} L{P(xm+40, YB)} '
+           f'C{P(xr, YB-10)} {P(xr, YB-150)} {P(xr, YB-300)} '
+           f'C{P(xr, hw+120)} {P(xm+R*0.3, ARM/2)} {P(xm, ARM/2)} '
+           f'C{P(xl+80, ARM/2)} {P(xl, ARM/2+120)} {P(xl, 420)}')
+    sw = w * sc
+    svg = (f'<path d="{e}" fill="{cor}"/>'
+           f'<path d="{sup}" fill="none" stroke="{cor}" stroke-width="{sw:.2f}"/>'
+           f'<path d="{inf}" fill="none" stroke="{cor}" stroke-width="{sw:.2f}"/>')
+    return svg, xs + Ws + 60
+
 def nome(tam, x0, base, cor_texto, tracking=-0.01):
-    s = tam / upm; partes = []; x = 0; posicoes = {}
-    pen_es = SVGPathPen(gs)   # E + ligadura + s num único caminho (união sem costuras)
-    for i, ch in enumerate('BarEscola'):
-        g = cmap[ord(ch)]
-        tp = TransformPen(pen_es if i in (3, 4) else SVGPathPen(gs), (s, 0, 0, -s, x0 + x * s, base))
-        if i in (3, 4):
-            gs[g].draw(tp)
-        else:
-            pen = SVGPathPen(gs); gs[g].draw(TransformPen(pen, (s, 0, 0, -s, x0 + x * s, base)))
-            partes.append(f'<path d="{pen.getCommands()}" fill="{cor_texto}"/>')
-        posicoes[i] = (x, g)
+    s = tam / upm; partes = []; x = 0
+    for i, ch in enumerate('Bar'):
+        g = cmap[ord(ch)]; pen = SVGPathPen(gs)
+        gs[g].draw(TransformPen(pen, (s, 0, 0, -s, x0 + x * s, base)))
+        partes.append(f'<path d="{pen.getCommands()}" fill="{cor_texto}"/>')
         x += hmtx[g][0] + tracking * upm
-    # ligadura: prolonga a barra inferior do E até ao meio da base do s
-    xE, gE = posicoes[3]; xS, gS = posicoes[4]
-    bE = bounds(gE); bS = bounds(gS); t = espessura_base_E()
-    x_ini = xE + bE[2] - 10; x_fim = xS + (bS[0] + bS[2]) / 2
-    tp = TransformPen(pen_es, (s, 0, 0, -s, x0, base))
-    # mesmo sentido dos contornos exteriores TrueType (horário com y para cima)
-    tp.moveTo((x_ini, 0)); tp.lineTo((x_ini, t)); tp.lineTo((x_fim, t)); tp.lineTo((x_fim, 0)); tp.closePath()
-    partes.append(f'<path d="{pen_es.getCommands()}" fill="{AMARELO}"/>')
+    lig, avanco = ligadura_es(x0 + x * s, base, s, AMARELO)
+    partes.append(lig); x += avanco + tracking * upm
+    for ch in 'cola':
+        g = cmap[ord(ch)]; pen = SVGPathPen(gs)
+        gs[g].draw(TransformPen(pen, (s, 0, 0, -s, x0 + x * s, base)))
+        partes.append(f'<path d="{pen.getCommands()}" fill="{cor_texto}"/>')
+        x += hmtx[g][0] + tracking * upm
     return ''.join(partes), x * s
 
 def frase(txt, tam, x0, base):
