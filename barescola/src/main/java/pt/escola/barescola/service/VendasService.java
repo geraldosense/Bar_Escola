@@ -27,7 +27,6 @@ public class VendasService {
             WHERE e.dataHora >= :inicio AND e.dataHora < :fim
               AND e.estado <> :cancelada
             GROUP BY p.nome
-            ORDER BY SUM(l.precoUnitario * l.quantidade) DESC
             """;
 
     private static final String NUMERO_ENCOMENDAS = """
@@ -44,7 +43,10 @@ public class VendasService {
                 .setParameter("inicio", dia.atStartOfDay())
                 .setParameter("fim", dia.plusDays(1).atStartOfDay())
                 .setParameter("cancelada", EstadoEncomenda.CANCELADA)
-                .getResultList();
+                .getResultList().stream()
+                // ordenado em Java: a especificação JPA não permite ORDER BY SUM(...) dentro de "SELECT new"
+                .sorted(java.util.Comparator.comparing(VendaProdutoDTO::total).reversed())
+                .toList();
 
         long numero = em.createQuery(NUMERO_ENCOMENDAS, Long.class)
                 .setParameter("inicio", dia.atStartOfDay())

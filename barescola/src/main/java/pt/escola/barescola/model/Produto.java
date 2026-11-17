@@ -24,9 +24,9 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "produto")
 @NamedQuery(name = Produto.TODOS,
-        query = "SELECT p FROM Produto p JOIN FETCH p.categoria c ORDER BY c.nome, p.nome")
+        query = "SELECT p FROM Produto p JOIN FETCH p.categoria ORDER BY p.categoria.nome, p.nome")
 @NamedQuery(name = Produto.ATIVOS,
-        query = "SELECT p FROM Produto p JOIN FETCH p.categoria c WHERE p.ativo = true ORDER BY c.nome, p.nome")
+        query = "SELECT p FROM Produto p JOIN FETCH p.categoria WHERE p.ativo = true ORDER BY p.categoria.nome, p.nome")
 public class Produto {
 
     public static final String TODOS = "Produto.todos";
