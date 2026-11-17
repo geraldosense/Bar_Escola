@@ -224,6 +224,7 @@ Diagrama de camadas detalhado: [docs/diagramas/arquitetura.md](barescola/docs/di
 | Página | Endereço | Papel |
 |---|---|---|
 | Login | `/login.html` | todos |
+| Criar conta de aluno | `/registo.html` | público |
 | Menu do dia, carrinho e pagamento | `/aluno/menu.html` | ALUNO |
 | Os meus pedidos (com estado) | `/aluno/pedidos.html` | ALUNO |
 | Ecrã do balcão (fila de encomendas) | `/balcao/fila.html` | FUNCIONARIO, GESTOR |
@@ -240,6 +241,7 @@ Diagrama de camadas detalhado: [docs/diagramas/arquitetura.md](barescola/docs/di
 | Método | Endpoint | Papel | Respostas |
 |---|---|---|---|
 | GET | `/api/estado` | público | 200 |
+| POST | `/api/registo` | público (cria conta de aluno) | 201, 400, 409 |
 | GET | `/api/me` | todos | 200 |
 | GET | `/api/produtos?ativos=true` | todos | 200 |
 | GET | `/api/produtos/{id}` · `/api/produtos/categorias` | todos | 200, 404 |
