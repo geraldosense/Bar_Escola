@@ -1,0 +1,11 @@
+# Sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+*.iml
+
+# Arquivos gerados
+*.zip
+*.war
