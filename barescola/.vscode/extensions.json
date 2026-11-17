@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "vscjava.vscode-java-pack",
+    "redhat.vscode-xml",
+    "redhat.vscode-community-server-connector",
+    "humao.rest-client",
+    "editorconfig.editorconfig",
+    "bierner.markdown-mermaid",
+    "mhutchie.git-graph",
+    "streetsidesoftware.code-spell-checker-portuguese"
+  ]
+}

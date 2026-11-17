@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Os meus pedidos · BarEscola</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <script type="module" src="../js/pedidos.js"></script>
+</head>
+<body>
+  <header class="topo">
+    <a class="marca" href="menu.html"><span class="logo" aria-hidden="true">🥪</span>BarEscola</a>
+    <nav aria-label="Principal">
+      <a href="menu.html">Menu</a>
+      <a href="pedidos.html" aria-current="page">Os meus pedidos</a>
+    </nav>
+    <div class="utilizador">
+      <span data-utilizador-nome></span>
+      <span class="saldo" data-saldo title="Saldo do cartão" hidden></span>
+      <form method="post" action="../logout"><button class="btn-sair" type="submit">Sair</button></form>
+    </div>
+  </header>
+
+  <main class="conteudo">
+    <div class="cabecalho-pagina">
+      <div>
+        <h1>Os meus pedidos</h1>
+        <p>Recebes um aviso aqui quando o pedido estiver pronto.</p>
+      </div>
+      <span class="ligacao" id="ligacao">A ligar…</span>
+    </div>
+    <div class="lista-encomendas" id="encomendas" aria-live="polite">
+      <p class="vazio-grande">A carregar…</p>
+    </div>
+  </main>
+</body>
+</html>

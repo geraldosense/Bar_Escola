@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  WSDL do serviço CartaoWS (etapa 9) – document/literal wrapped.
+  A versão oficial é gerada pelo WildFly; para a atualizar depois do deploy:
+    curl "http://localhost:8080/barescola/CartaoWS?wsdl" -o docs/soap/CartaoWS.wsdl
+-->
+<definitions name="CartaoWS"
+             targetNamespace="http://soap.barescola.escola.pt/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://soap.barescola.escola.pt/"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <types>
+    <xs:schema targetNamespace="http://soap.barescola.escola.pt/" version="1.0">
+      <xs:element name="saldo" type="tns:saldo"/>
+      <xs:element name="saldoResponse" type="tns:saldoResponse"/>
+      <xs:element name="CartaoInvalido" type="tns:CartaoInvalido"/>
+
+      <xs:complexType name="saldo">
+        <xs:sequence>
+          <xs:element name="numeroCartao" type="xs:int"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="saldoResponse">
+        <xs:sequence>
+          <xs:element name="saldoCartao" type="tns:saldoCartao" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="saldoCartao">
+        <xs:sequence>
+          <xs:element name="numeroCartao" type="xs:int"/>
+          <xs:element name="nome" type="xs:string" minOccurs="0"/>
+          <xs:element name="turma" type="xs:string" minOccurs="0"/>
+          <xs:element name="saldo" type="xs:decimal" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="CartaoInvalido">
+        <xs:sequence>
+          <xs:element name="message" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </types>
+
+  <message name="saldo">
+    <part name="parameters" element="tns:saldo"/>
+  </message>
+  <message name="saldoResponse">
+    <part name="parameters" element="tns:saldoResponse"/>
+  </message>
+  <message name="CartaoInvalidoException">
+    <part name="fault" element="tns:CartaoInvalido"/>
+  </message>
+
+  <portType name="CartaoWS">
+    <operation name="saldo">
+      <input message="tns:saldo"/>
+      <output message="tns:saldoResponse"/>
+      <fault name="CartaoInvalidoException" message="tns:CartaoInvalidoException"/>
+    </operation>
+  </portType>
+
+  <binding name="CartaoWSServiceSoapBinding" type="tns:CartaoWS">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="saldo">
+      <soap:operation soapAction=""/>
+      <input><soap:body use="literal"/></input>
+      <output><soap:body use="literal"/></output>
+      <fault name="CartaoInvalidoException"><soap:fault name="CartaoInvalidoException" use="literal"/></fault>
+    </operation>
+  </binding>
+
+  <service name="CartaoWS">
+    <port name="CartaoPort" binding="tns:CartaoWSServiceSoapBinding">
+      <soap:address location="http://localhost:8080/barescola/CartaoWS"/>
+    </port>
+  </service>
+</definitions>

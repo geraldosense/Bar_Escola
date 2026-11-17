@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title><ui:insert name="titulo">Backoffice</ui:insert> · BarEscola</title>
+  <link rel="stylesheet" href="#{request.contextPath}/css/app.css"/>
+</h:head>
+<h:body>
+  <header class="topo">
+    <a class="marca" href="#{request.contextPath}/backoffice/produtos.xhtml">
+      <span class="logo" aria-hidden="true">🥪</span>BarEscola · Gestão
+    </a>
+    <nav aria-label="Backoffice">
+      <a href="#{request.contextPath}/backoffice/produtos.xhtml"
+         aria-current="#{view.viewId eq '/backoffice/produtos.xhtml' ? 'page' : 'false'}">Produtos e stock</a>
+      <a href="#{request.contextPath}/backoffice/vendas.xhtml"
+         aria-current="#{view.viewId eq '/backoffice/vendas.xhtml' ? 'page' : 'false'}">Vendas</a>
+      <a href="#{request.contextPath}/backoffice/saldos.xhtml"
+         aria-current="#{view.viewId eq '/backoffice/saldos.xhtml' ? 'page' : 'false'}">Saldos</a>
+      <a href="#{request.contextPath}/balcao/fila.html">Balcão</a>
+    </nav>
+    <div class="utilizador">
+      <span>#{request.userPrincipal.name}</span>
+      <form method="post" action="#{request.contextPath}/logout"><button class="btn-sair" type="submit">Sair</button></form>
+    </div>
+  </header>
+
+  <main class="conteudo">
+    <h:messages styleClass="mensagens" infoClass="info" errorClass="erro" warnClass="erro" globalOnly="false"/>
+    <ui:insert name="conteudo"/>
+  </main>
+</h:body>
+</html>

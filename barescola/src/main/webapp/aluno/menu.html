@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Menu do dia · BarEscola</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <script type="module" src="../js/menu.js"></script>
+</head>
+<body class="tem-barra">
+  <header class="topo">
+    <a class="marca" href="menu.html"><span class="logo" aria-hidden="true">🥪</span>BarEscola</a>
+    <nav aria-label="Principal">
+      <a href="menu.html" aria-current="page">Menu</a>
+      <a href="pedidos.html">Os meus pedidos</a>
+    </nav>
+    <div class="utilizador">
+      <span data-utilizador-nome></span>
+      <span class="saldo" data-saldo title="Saldo do cartão" hidden></span>
+      <form method="post" action="../logout"><button class="btn-sair" type="submit">Sair</button></form>
+    </div>
+  </header>
+
+  <main class="conteudo">
+    <div class="cabecalho-pagina">
+      <div>
+        <h1>Menu do dia</h1>
+        <p>Escolhe, paga com o cartão e levanta no intervalo.</p>
+      </div>
+    </div>
+
+    <div class="grelha-menu">
+      <section aria-labelledby="titulo-produtos">
+        <h2 id="titulo-produtos" class="sr-only">Produtos</h2>
+        <div class="chips" id="filtros" role="toolbar" aria-label="Filtrar por categoria"></div>
+        <div class="produtos" id="produtos" aria-live="polite">
+          <p class="vazio-grande">A carregar o menu…</p>
+        </div>
+      </section>
+
+      <aside class="cartao carrinho" id="carrinho" aria-labelledby="titulo-carrinho">
+        <h2 id="titulo-carrinho">Carrinho <span id="carrinho-contador" class="ajuda"></span></h2>
+        <ul id="carrinho-linhas"></ul>
+        <div class="total"><span>Total</span><span id="carrinho-total">0,00 €</span></div>
+
+        <div class="campo">
+          <label for="intervalo">Levantar no intervalo</label>
+          <select id="intervalo" required></select>
+          <p class="ajuda">As encomendas fecham 15 minutos antes de cada intervalo.</p>
+        </div>
+        <button class="btn btn-bloco" id="btn-pagar" type="button" disabled>Pagar com o cartão</button>
+      </aside>
+    </div>
+  </main>
+
+  <div class="barra-carrinho" id="barra-carrinho">
+    <span><strong id="barra-total">0,00 €</strong> · <span id="barra-artigos">0 artigos</span></span>
+    <a class="btn" href="#carrinho">Ver carrinho</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Maven: package",
+      "type": "shell",
+      "command": "mvn -q clean package",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Maven: testes",
+      "type": "shell",
+      "command": "mvn test",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "WildFly: deploy (servidor a correr)",
+      "type": "shell",
+      "command": "mvn -q clean package wildfly:deploy",
+      "problemMatcher": []
+    },
+    {
+      "label": "WildFly: iniciar (standalone-full, debug 8787)",
+      "type": "shell",
+      "isBackground": true,
+      "linux": { "command": "${env:WILDFLY_HOME}/bin/standalone.sh -c standalone-full.xml --debug 8787" },
+      "osx": { "command": "${env:WILDFLY_HOME}/bin/standalone.sh -c standalone-full.xml --debug 8787" },
+      "windows": { "command": "${env:WILDFLY_HOME}\\bin\\standalone.bat -c standalone-full.xml --debug 8787" },
+      "problemMatcher": []
+    },
+    {
+      "label": "WildFly: configurar (datasource + utilizadores)",
+      "type": "shell",
+      "linux": { "command": "./scripts/setup-wildfly.sh" },
+      "osx": { "command": "./scripts/setup-wildfly.sh" },
+      "windows": { "command": "powershell -ExecutionPolicy Bypass -File scripts\\setup-wildfly.ps1" },
+      "problemMatcher": []
+    }
+  ]
+}

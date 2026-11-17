@@ -1,0 +1,58 @@
+### BarEscola – pedidos para a extensão "REST Client" do VS Code
+### Clique em "Send Request" por cima de cada pedido. Os cookies de sessão são guardados.
+
+@base = http://localhost:8080/barescola
+
+### Estado (público – etapa 1)
+GET {{base}}/api/estado
+
+### Login como aluno
+POST {{base}}/j_security_check
+Content-Type: application/x-www-form-urlencoded
+
+j_username=aluno1@barescola.pt&j_password=Aluno%232026
+
+### Quem sou eu
+GET {{base}}/api/me
+
+### Menu do dia
+GET {{base}}/api/produtos?ativos=true
+
+### Intervalos (aberto = ainda aceita encomendas)
+GET {{base}}/api/intervalos
+
+### Criar e pagar encomenda (ajuste o intervaloId a um intervalo aberto)
+POST {{base}}/api/encomendas
+Content-Type: application/json
+
+{
+  "intervaloId": 5,
+  "linhas": [
+    { "produtoId": 1, "quantidade": 2 },
+    { "produtoId": 9, "quantidade": 1 }
+  ]
+}
+
+### As minhas encomendas
+GET {{base}}/api/encomendas/minhas
+
+### Cancelar (só enquanto PAGA)
+POST {{base}}/api/encomendas/1/cancelar
+
+### Logout
+POST {{base}}/logout
+
+### Login como balcão
+POST {{base}}/j_security_check
+Content-Type: application/x-www-form-urlencoded
+
+j_username=balcao@barescola.pt&j_password=Balcao%232026
+
+### Fila do dia
+GET {{base}}/api/encomendas
+
+### Marcar pronta
+PUT {{base}}/api/encomendas/1/estado
+Content-Type: application/json
+
+{ "estado": "PRONTA" }

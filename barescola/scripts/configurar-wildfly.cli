@@ -1,0 +1,13 @@
+# ---------------------------------------------------------------------------
+# BarEscola – configuração do WildFly (corre com o servidor PARADO)
+#   Linux/macOS: $WILDFLY_HOME/bin/jboss-cli.sh --file=scripts/configurar-wildfly.cli
+#   Windows:     %WILDFLY_HOME%\bin\jboss-cli.bat --file=scripts\configurar-wildfly.cli
+# ---------------------------------------------------------------------------
+embed-server --server-config=standalone-full.xml --std-out=echo
+
+# Datasource H2 em ficheiro (os dados sobrevivem a reinícios do servidor)
+if (outcome != success) of /subsystem=datasources/data-source=BarEscolaDS:read-resource
+    data-source add --name=BarEscolaDS --jndi-name=java:jboss/datasources/BarEscolaDS --driver-name=h2 --connection-url="jdbc:h2:file:${jboss.server.data.dir}/barescola/barescola;DB_CLOSE_ON_EXIT=FALSE" --user-name=sa --password=sa
+end-if
+
+stop-embedded-server

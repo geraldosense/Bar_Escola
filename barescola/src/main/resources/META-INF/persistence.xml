@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+  <persistence-unit name="barescolaPU" transaction-type="JTA">
+    <!-- Criado por scripts/configurar-wildfly.cli (H2 em ficheiro).
+         Alternativa sem configuração: java:jboss/datasources/ExampleDS (H2 em memória). -->
+    <jta-data-source>java:jboss/datasources/BarEscolaDS</jta-data-source>
+
+    <class>pt.escola.barescola.model.Categoria</class>
+    <class>pt.escola.barescola.model.Produto</class>
+    <class>pt.escola.barescola.model.Aluno</class>
+    <class>pt.escola.barescola.model.Intervalo</class>
+    <class>pt.escola.barescola.model.Encomenda</class>
+    <class>pt.escola.barescola.model.LinhaEncomenda</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+    <validation-mode>CALLBACK</validation-mode>
+
+    <properties>
+      <!-- Cria/atualiza as tabelas automaticamente (adequado para o projeto escolar) -->
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <property name="hibernate.show_sql" value="false"/>
+      <property name="hibernate.format_sql" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>

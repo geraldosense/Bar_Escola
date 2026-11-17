@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Protótipo (etapa 2) · BarEscola</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <script src="../js/prototipo.js" defer></script>
+</head>
+<body class="tem-barra">
+  <!-- ETAPA 2 – HTML/CSS/JS com dados falsos. Mantido para mostrar a evolução do projeto.
+       A versão final (etapa 6) é /aluno/menu.html, que usa a API REST com fetch. -->
+  <header class="topo">
+    <a class="marca" href="#"><span class="logo" aria-hidden="true">🥪</span>BarEscola</a>
+    <nav><a href="#" aria-current="page">Protótipo – etapa 2</a></nav>
+  </header>
+
+  <main class="conteudo">
+    <div class="alerta alerta-info">Protótipo com dados falsos (sem servidor). Juntar e remover produtos atualiza o total.</div>
+    <div class="grelha-menu">
+      <section>
+        <h1>Menu do dia</h1>
+        <div class="produtos" id="produtos"></div>
+      </section>
+      <aside class="cartao carrinho" id="carrinho">
+        <h2>Carrinho</h2>
+        <ul id="linhas"></ul>
+        <div class="total"><span>Total</span><span id="total">0,00 €</span></div>
+        <button class="btn btn-bloco" type="button" id="limpar">Limpar carrinho</button>
+      </aside>
+    </div>
+  </main>
+
+  <div class="barra-carrinho">
+    <span><strong id="barra-total">0,00 €</strong></span>
+    <a class="btn" href="#carrinho">Ver carrinho</a>
+  </div>
+</body>
+</html>

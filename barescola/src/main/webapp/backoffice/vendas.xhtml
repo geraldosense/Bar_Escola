@@ -1,0 +1,74 @@
+<ui:composition template="/WEB-INF/templates/backoffice.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:pt="jakarta.faces.passthrough">
+
+  <ui:define name="titulo">Vendas</ui:define>
+
+  <ui:define name="conteudo">
+    <div class="cabecalho-pagina">
+      <div>
+        <h1>Vendas do dia</h1>
+        <p>Consulta JPA com SUM por produto e parâmetro de data (US07).</p>
+      </div>
+      <h:form id="filtro" style="display:flex;gap:.5rem;align-items:end;flex-wrap:wrap">
+        <div>
+          <h:outputLabel for="data" value="Dia"/>
+          <h:inputText id="data" value="#{vendasBean.data}" pt:type="date" style="width:auto">
+            <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+          </h:inputText>
+        </div>
+        <h:commandButton value="Consultar" action="#{vendasBean.consultar}" styleClass="btn"/>
+        <h:commandButton value="Executar fecho do dia (RN5)" action="#{vendasBean.executarFechoDia}"
+                         styleClass="btn btn-secundario"
+                         onclick="return confirm('Passar as encomendas PRONTA deste dia para ENTREGUE?')"/>
+      </h:form>
+    </div>
+
+    <div class="kpis">
+      <div class="cartao kpi">
+        <div class="valor">
+          <h:outputText value="#{vendasBean.vendas.total()}">
+            <f:convertNumber type="currency" currencyCode="EUR" locale="pt_PT"/>
+          </h:outputText>
+        </div>
+        <div class="rotulo">Total vendido</div>
+      </div>
+      <div class="cartao kpi">
+        <div class="valor">#{vendasBean.vendas.numeroEncomendas()}</div>
+        <div class="rotulo">Encomendas (sem canceladas)</div>
+      </div>
+      <div class="cartao kpi">
+        <div class="valor">#{vendasBean.vendas.produtos().size()}</div>
+        <div class="rotulo">Produtos diferentes vendidos</div>
+      </div>
+    </div>
+
+    <section class="cartao">
+      <h2>Por produto</h2>
+      <h:panelGroup rendered="#{empty vendasBean.vendas.produtos()}">
+        <p class="vazio-grande">Sem vendas neste dia.</p>
+      </h:panelGroup>
+      <h:dataTable value="#{vendasBean.vendas.produtos()}" var="v"
+                   rendered="#{not empty vendasBean.vendas.produtos()}">
+        <h:column>
+          <f:facet name="header">Produto</f:facet>
+          #{v.produto()}
+        </h:column>
+        <h:column headerClass="num">
+          <f:facet name="header">Quantidade</f:facet>
+          <div class="num">#{v.quantidade()}</div>
+        </h:column>
+        <h:column headerClass="num">
+          <f:facet name="header">Total</f:facet>
+          <div class="num">
+            <h:outputText value="#{v.total()}">
+              <f:convertNumber type="currency" currencyCode="EUR" locale="pt_PT"/>
+            </h:outputText>
+          </div>
+        </h:column>
+      </h:dataTable>
+    </section>
+  </ui:define>
+</ui:composition>

@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:car="http://soap.barescola.escola.pt/">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <car:saldo>
+      <numeroCartao>1001</numeroCartao>
+    </car:saldo>
+  </soapenv:Body>
+</soapenv:Envelope>

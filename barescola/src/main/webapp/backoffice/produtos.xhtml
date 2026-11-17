@@ -1,0 +1,123 @@
+<ui:composition template="/WEB-INF/templates/backoffice.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:pt="jakarta.faces.passthrough">
+
+  <ui:define name="titulo">Produtos e stock</ui:define>
+
+  <ui:define name="conteudo">
+    <div class="cabecalho-pagina">
+      <div>
+        <h1>Produtos e stock</h1>
+        <p>Gerir produtos, preços, stock e disponibilidade no menu (US06).</p>
+      </div>
+    </div>
+
+    <div class="grelha-menu">
+      <!-- Lista de produtos -->
+      <section class="cartao">
+        <h:form id="lista">
+          <div class="tabela-wrapper">
+            <h:dataTable value="#{produtosBean.produtos}" var="p">
+              <h:column>
+                <f:facet name="header">Produto</f:facet>
+                <strong>#{p.nome()}</strong><br/>
+                <span class="ajuda">#{p.categoria()}#{p.ativo() ? '' : ' · inativo'}</span>
+              </h:column>
+              <h:column headerClass="num" footerClass="num">
+                <f:facet name="header">Preço</f:facet>
+                <h:outputText value="#{p.preco()}">
+                  <f:convertNumber type="currency" currencyCode="EUR" locale="pt_PT"/>
+                </h:outputText>
+              </h:column>
+              <h:column>
+                <f:facet name="header">Stock</f:facet>
+                <div class="acoes-tabela" style="align-items:center">
+                  <h:commandButton value="−" action="#{produtosBean.ajustarStock(p, -1)}"
+                                   styleClass="btn btn-secundario btn-redondo">
+                    <f:ajax render="@form"/>
+                  </h:commandButton>
+                  <strong style="min-width:2ch;text-align:center">#{p.stock()}</strong>
+                  <h:commandButton value="+" action="#{produtosBean.ajustarStock(p, 1)}"
+                                   styleClass="btn btn-secundario btn-redondo">
+                    <f:ajax render="@form"/>
+                  </h:commandButton>
+                  <h:commandButton value="+10" action="#{produtosBean.ajustarStock(p, 10)}"
+                                   styleClass="btn btn-secundario btn-pequeno">
+                    <f:ajax render="@form"/>
+                  </h:commandButton>
+                </div>
+              </h:column>
+              <h:column>
+                <f:facet name="header">Ações</f:facet>
+                <div class="acoes-tabela">
+                  <h:commandButton value="Editar" action="#{produtosBean.editar(p)}"
+                                   styleClass="btn btn-secundario btn-pequeno">
+                    <f:ajax render=":formulario"/>
+                  </h:commandButton>
+                  <h:commandButton value="#{p.ativo() ? 'Desativar' : 'Ativar'}"
+                                   action="#{produtosBean.alternarAtivo(p)}"
+                                   styleClass="btn btn-secundario btn-pequeno">
+                    <f:ajax render="@form"/>
+                  </h:commandButton>
+                  <h:commandButton value="Remover" action="#{produtosBean.remover(p)}"
+                                   styleClass="btn btn-perigo btn-pequeno"
+                                   onclick="return confirm('Remover este produto?')"/>
+                </div>
+              </h:column>
+            </h:dataTable>
+          </div>
+        </h:form>
+      </section>
+
+      <!-- Formulário novo / editar -->
+      <aside class="cartao">
+        <h:form id="formulario">
+          <h2>#{produtosBean.edicao ? 'Editar produto' : 'Novo produto'}</h2>
+
+          <div class="campo">
+            <h:outputLabel for="nome" value="Nome"/>
+            <h:inputText id="nome" value="#{produtosBean.nome}" required="true"
+                         requiredMessage="Indique o nome." pt:maxlength="80"/>
+          </div>
+          <div class="linha-campos">
+            <div class="campo">
+              <h:outputLabel for="preco" value="Preço (€)"/>
+              <h:inputText id="preco" value="#{produtosBean.preco}" required="true"
+                           requiredMessage="Indique o preço."
+                           converterMessage="Preço inválido."
+                           pt:type="number" pt:step="0.01" pt:min="0.01"/>
+            </div>
+            <div class="campo">
+              <h:outputLabel for="stock" value="Stock"/>
+              <h:inputText id="stock" value="#{produtosBean.stock}" required="true"
+                           pt:type="number" pt:min="0"/>
+            </div>
+          </div>
+          <div class="campo">
+            <h:outputLabel for="categoria" value="Categoria"/>
+            <h:selectOneMenu id="categoria" value="#{produtosBean.categoriaId}" required="true"
+                             requiredMessage="Escolha a categoria.">
+              <f:selectItem itemLabel="— escolher —" noSelectionOption="true"/>
+              <f:selectItems value="#{produtosBean.categorias}" var="c"
+                             itemValue="#{c.id()}" itemLabel="#{c.nome()}"/>
+            </h:selectOneMenu>
+          </div>
+          <div class="campo" style="display:flex;gap:.5rem;align-items:center">
+            <h:selectBooleanCheckbox id="ativo" value="#{produtosBean.ativo}" style="width:auto;min-height:auto"/>
+            <h:outputLabel for="ativo" value="Visível no menu" style="margin:0"/>
+          </div>
+
+          <div class="acoes-tabela">
+            <h:commandButton value="Guardar" action="#{produtosBean.guardar}" styleClass="btn"/>
+            <h:commandButton value="Limpar" action="#{produtosBean.limpar}" immediate="true"
+                             styleClass="btn btn-secundario">
+              <f:ajax render="@form"/>
+            </h:commandButton>
+          </div>
+        </h:form>
+      </aside>
+    </div>
+  </ui:define>
+</ui:composition>
