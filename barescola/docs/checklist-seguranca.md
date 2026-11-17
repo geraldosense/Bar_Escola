@@ -18,8 +18,10 @@
 | 14 | Cabeçalhos de segurança | ✅ | `SegurancaHeadersFilter` (`nosniff`, `X-Frame-Options`, `Referrer-Policy`, `no-store` na API) |
 | 15 | WebSockets autenticados e por papel | ✅ | `/ws/aluno` e `/ws/balcao` protegidos no `web.xml`; o aluno só recebe avisos das suas encomendas |
 | 16 | Logout invalida a sessão (POST) | ✅ | `LogoutServlet` |
+| 16b | Criação de conta pública só cria contas ALUNO, com saldo 0 € e palavra-passe guardada apenas como hash | ✅ | `RegistoService`, `ContasServidor` (contas de funcionário/gestor só pela administração) |
 | 17 | HTTPS e cookie `Secure` | ⚠️ produção | Configurar certificado no WildFly e `<secure>true</secure>` |
 | 18 | Serviço SOAP autenticado | ⚠️ produção | Em produção proteger `CartaoWS` com WS-Security ou BASIC + HTTPS (rede interna da escola) |
+| 18b | Contas guardadas em ficheiro com hash MD5 (formato do `add-user` do WildFly) | ⚠️ produção | Em produção usar um `jdbc-realm` do Elytron com bcrypt e limitar tentativas de registo/login |
 | 19 | CSRF | ⚠️ parcial | API só aceita JSON (exige *preflight* CORS entre sites); JSF usa `ViewState`. Em produção: `SameSite=Strict` no cookie |
 
 ## Testes manuais
