@@ -14,7 +14,8 @@ echo ">> A criar datasource BarEscolaDS..."
 "$WILDFLY_HOME/bin/jboss-cli.sh" --file="$DIR/configurar-wildfly.cli"
 
 echo ">> A criar utilizadores de teste (ApplicationRealm)..."
-add() { "$WILDFLY_HOME/bin/add-user.sh" -a -s -u "$1" -p "$2" -g "$3"; }
+# "|| true": se o utilizador já existir, continua (o script pode ser corrido várias vezes)
+add() { "$WILDFLY_HOME/bin/add-user.sh" -a -s -u "$1" -p "$2" -g "$3" || true; }
 add "aluno1@barescola.pt" "Aluno#2026"  "ALUNO"
 add "aluno2@barescola.pt" "Aluno#2026"  "ALUNO"
 add "aluno3@barescola.pt" "Aluno#2026"  "ALUNO"
