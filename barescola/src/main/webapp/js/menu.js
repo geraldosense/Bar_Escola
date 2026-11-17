@@ -28,7 +28,7 @@ async function carregar() {
       api('/produtos?ativos=true'),
       api('/intervalos'),
     ]);
-    estado.produtos = produtos;
+    estado.produtos = ordenar(produtos);
     estado.intervalos = intervalos;
     limparCarrinhoInvalido();
     desenharFiltros();
@@ -49,6 +49,10 @@ function limparCarrinhoInvalido() {
   }
   guardarCarrinho();
 }
+
+/** Ordem alfabética portuguesa (a BD ordena "Água" depois de "Sumo"). */
+const ordenar = (lista) => [...lista].sort((a, b) =>
+  a.categoria.localeCompare(b.categoria, 'pt') || a.nome.localeCompare(b.nome, 'pt'));
 
 const produto = (id) => estado.produtos.find((p) => p.id === id);
 
@@ -103,7 +107,7 @@ async function pagar() {
     guardarCarrinho();
     atualizarSaldo(pagamento.saldoRestante);
     toast(`Encomenda #${pagamento.encomenda.id} paga! Saldo restante: ${euros(pagamento.saldoRestante)}`, 'sucesso', 6000);
-    estado.produtos = await api('/produtos?ativos=true'); // stock atualizado
+    estado.produtos = ordenar(await api('/produtos?ativos=true')); // stock atualizado
     desenhar();
   } catch (e) {
     mostrarErro(e);

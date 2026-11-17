@@ -339,13 +339,13 @@ input:focus, select:focus { border-color: var(--marinho); outline: 3px solid var
   white-space: nowrap;
 }
 .estado::before { content: ""; width: .6rem; height: .6rem; border-radius: 50%; background: currentColor; }
-.estado-PAGA { color: var(--marinho-2); }
-.estado-EM_PREPARACAO { color: var(--ambar); }
-.estado-PRONTA { color: var(--marinho); }
-.estado.estado-PRONTA { background: var(--senha); padding: .15rem .55rem; border-radius: 3px; }
+/* só a etiqueta muda de cor – a senha inteira (que também tem a classe estado-X) não */
+.estado.estado-PAGA { color: var(--marinho-2); }
+.estado.estado-EM_PREPARACAO { color: var(--ambar); }
+.estado.estado-PRONTA { color: var(--marinho); background: var(--senha); padding: .15rem .55rem; border-radius: 3px; }
 .estado.estado-PRONTA::before { background: var(--marinho); }
-.estado-ENTREGUE { color: var(--tinta-2); }
-.estado-CANCELADA { color: var(--vermelho); }
+.estado.estado-ENTREGUE { color: var(--tinta-2); }
+.estado.estado-CANCELADA { color: var(--vermelho); }
 
 /* Etapas do pedido – sequência real, por isso numerada pela ordem */
 .etapas { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 0; margin: .9rem 0 .25rem; }
